@@ -1,0 +1,10 @@
+name: BedrockUtils
+version: '${project.version}'
+main: ru.mrbedrockpy.bedrockutils.BedrockUtils
+api-version: '1.13'
+
+authors:
+  - MrBedrockpy
+  - LEDev
+  - swat1x
+  - NichtStudioCode
