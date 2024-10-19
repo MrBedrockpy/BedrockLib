@@ -5,9 +5,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import ru.mrbedrockpy.bedrocklib.ChatUtil;
-import ru.mrbedrockpy.magicnight.Plugin;
-import ru.mrbedrockpy.uiapi.ChatUtil;
 
 import java.io.File;
 import java.io.IOException;
