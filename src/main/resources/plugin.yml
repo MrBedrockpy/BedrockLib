@@ -1,0 +1,4 @@
+name: BedrockLib
+version: '${version}'
+main: ru.mrbedrockpy.bedrocklib.BedrockLib
+authors: [MrBedrockpy]
