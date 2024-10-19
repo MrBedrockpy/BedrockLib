@@ -13,7 +13,7 @@
 ```xml
 <dependency>
   <groupId>com.github.MrBedrockpy</groupId>
-	<artifactId>BedrockLib</artifactId>
-	<version>Tag</version>
+  <artifactId>BedrockLib</artifactId>
+  <version>Tag</version>
 </dependency>
 ```
