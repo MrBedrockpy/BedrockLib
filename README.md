@@ -14,6 +14,6 @@
 <dependency>
   <groupId>com.github.MrBedrockpy</groupId>
   <artifactId>BedrockLib</artifactId>
-  <version>Tag</version>
+  <version>1.0</version>
 </dependency>
 ```
