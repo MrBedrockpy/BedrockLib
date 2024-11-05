@@ -19,7 +19,7 @@ public abstract class BaseCommand implements TabExecutor {
     @Override
     public final boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (permission(sender)) {
+        if (!permission(sender)) {
             sender.sendMessage(getNotPermissionMessage());
             return false;
         }
@@ -55,9 +55,17 @@ public abstract class BaseCommand implements TabExecutor {
     @Override
     public final List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> list = new ArrayList<>();
-        for (SubCommand subCommand: getSubCommands())
-            if (subCommand.permission(sender))
-                list.add(subCommand.getTag());
+        if (args.length == 1) {
+            for (SubCommand subCommand: getSubCommands())
+                if (subCommand.permission(sender))
+                    list.add(subCommand.getTag());
+        }
+        else {
+            for (SubCommand subCommand: getSubCommands())
+                if (subCommand.permission(sender))
+                    if (args[0].equals(subCommand.getTag()))
+                        list.addAll(subCommand.completer(sender, args));
+        }
         return list;
     }
 

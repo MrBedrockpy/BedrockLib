@@ -10,52 +10,62 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class Menu implements Listener {
 
-    private final Map<Integer, Item> slots = new HashMap<>();
-
-    private final List<Inventory> menus = new ArrayList<>();
+    protected final List<Window> windows = new ArrayList<>();
 
     public Menu(Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
+    }
+
+    public final void open(Player player) {
+        Gui gui = new Gui.Builder()
+                .title(getTitle())
+                .size(getSize())
+                .build();
+        settingItems(gui);
+        Window window = new Window(player, gui);
+        windows.add(window);
+        window.open();
     }
 
     protected abstract String getTitle();
 
     protected abstract int getSize();
 
-    public final void open(Player player) {
-        Inventory menu = Bukkit.createInventory(player, getSize(), getTitle());
+    protected void settingItems(Gui gui) {}
 
-        for (Integer slot: slots.keySet()) {
-            menu.setItem(slot, slots.get(slot).getItemIcon().build());
-        }
-
-        player.openInventory(menu);
-        menus.add(menu);
-    }
-
-    protected final void setItem(int slot, Item item) {
-        slots.put(slot, item);
-    }
-
-    protected abstract boolean isEditable();
+    protected void onClose(Window window) {}
 
     @EventHandler
     public void onMenuClick(InventoryClickEvent event) {
-        if (!menus.contains(event.getInventory())) return;
+        if (!containsInventory(event.getInventory())) return;
         if (event.getCurrentItem() == null) return;
-        Item item = slots.get(event.getSlot());
+        Item item = getGuiByPlayer((Player) event.getWhoClicked()).getItems().get(event.getSlot());
+        if (item == null) return;
         item.onClick(this, (Player) event.getWhoClicked(), event);
-        event.setCancelled(!isEditable());
+        event.setCancelled(true);
+    }
+
+    protected boolean containsInventory(Inventory inventory) {
+        for (Window window: windows) if (window.getPlayer().getInventory() == inventory) return true;
+        return false;
+    }
+
+    protected Gui getGuiByPlayer(Player player) {
+        for (Window window: windows) if (window.getPlayer() == player) return window.getGui();
+        return null;
     }
 
     @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        menus.remove(event.getInventory());
+    public final void onInventoryClose(InventoryCloseEvent event) {
+        for (Window window: windows) {
+            if (window.getPlayer() != event.getPlayer()) continue;
+            onClose(window);
+            window.close();
+            windows.remove(window);
+        }
     }
 }

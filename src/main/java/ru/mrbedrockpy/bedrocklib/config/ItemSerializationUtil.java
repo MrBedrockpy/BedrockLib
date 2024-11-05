@@ -125,21 +125,21 @@ public class ItemSerializationUtil {
      * @return Inventory created from the Base64 string.
      * @throws IOException
      */
-    public static Inventory fromBase64(String data) throws IOException {
+    public static Inventory fromBase64(String data) {
+        if (data == null) return null;
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
             Inventory inventory = Bukkit.getServer().createInventory(null, dataInput.readInt());
 
-            // Read the serialized inventory
             for (int i = 0; i < inventory.getSize(); i++) {
                 inventory.setItem(i, (ItemStack) dataInput.readObject());
             }
 
             dataInput.close();
             return inventory;
-        } catch (ClassNotFoundException e) {
-            throw new IOException("Unable to decode class type.", e);
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 

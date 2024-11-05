@@ -22,10 +22,8 @@ public class ItemBuilder {
 
     public static ItemBuilder open(ItemStack itemStack) {
         ItemBuilder itemBuilder = new ItemBuilder();
-
         itemBuilder.itemStack = itemStack.clone();
         itemBuilder.itemMeta = itemStack.getItemMeta();
-
         return itemBuilder;
     }
 
