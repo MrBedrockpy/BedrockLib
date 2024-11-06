@@ -1,7 +1,12 @@
-## BedrockLib
-### Installation
+# BedrockLib
 
-For Maven:
+## Briefly about library
+
+##### This library is ultimate utility pack for work with Spigot API. It is included Command API for flexibility working with commands in plugin, UI utilities for smart controlling menus and own economy system.
+
+## Installation
+
+##### For Maven:
 
 ```xml
 <repositories>
@@ -20,7 +25,7 @@ For Maven:
 </dependency>
 ```
 
-For Gradle:
+##### For Gradle:
 
 ```gradle
 repositories {
