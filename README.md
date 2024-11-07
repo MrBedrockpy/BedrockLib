@@ -38,6 +38,6 @@ repositories {
 
 ```gradle
 dependencies {
-  implementation 'com.github.MrBedrockpy:BedrockLib:Tag'
+  compileOnly 'com.github.MrBedrockpy:BedrockLib:Tag'
 }
 ```
