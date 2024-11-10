@@ -21,7 +21,7 @@
 <dependency>
   <groupId>com.github.MrBedrockpy</groupId>
   <artifactId>BedrockLib</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 ```
 
@@ -38,6 +38,6 @@ repositories {
 
 ```gradle
 dependencies {
-  compileOnly 'com.github.MrBedrockpy:BedrockLib:Tag'
+  compileOnly 'com.github.MrBedrockpy:BedrockLib:1.1'
 }
 ```
