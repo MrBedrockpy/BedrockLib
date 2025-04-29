@@ -1,10 +1,12 @@
 plugins {
     id 'java'
+    id 'maven-publish'
     id 'com.gradleup.shadow' version '9.0.0-beta12'
 }
 
 group = 'ru.mrbedrockpy'
-version = '1.9'
+def artifact = 'BedrockLib'
+version = '1.9.1'
 
 repositories {
     mavenCentral()
@@ -47,6 +49,17 @@ java {
 shadowJar {
     configurations = project.configurations.named('runtimeClasspath').map { [it] }
     archiveFileName = "${project.name}-${project.version}.jar"
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = project.group
+            artifactId = artifact
+            version = project.version
+            from components.java
+        }
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
