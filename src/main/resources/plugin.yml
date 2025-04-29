@@ -1,4 +1,0 @@
-name: BedrockLib
-version: '${version}'
-main: ru.mrbedrockpy.bedrocklib.BedrockLib
-api-version: '1.13'
