@@ -6,7 +6,11 @@ import ru.mrbedrockpy.bedrocklib.config.variable.ConfigVariable;
 public class IntVariable extends ConfigVariable<Integer> {
 
     public IntVariable(String path) {
-        super(path);
+        super(path, 0);
+    }
+
+    public IntVariable(String path, int defaultValue) {
+        super(path, defaultValue);
     }
 
     @Override

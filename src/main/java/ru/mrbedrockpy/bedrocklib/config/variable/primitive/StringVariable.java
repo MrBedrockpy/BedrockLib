@@ -6,7 +6,11 @@ import ru.mrbedrockpy.bedrocklib.config.variable.ConfigVariable;
 public class StringVariable extends ConfigVariable<String> {
 
     public StringVariable(String path) {
-        super(path);
+        super(path, "");
+    }
+
+    public StringVariable(String path, String defaultValue) {
+        super(path, defaultValue);
     }
 
     @Override

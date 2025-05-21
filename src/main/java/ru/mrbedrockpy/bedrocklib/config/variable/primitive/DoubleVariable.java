@@ -6,7 +6,11 @@ import ru.mrbedrockpy.bedrocklib.config.variable.ConfigVariable;
 public class DoubleVariable extends ConfigVariable<Double> {
 
     public DoubleVariable(String path) {
-        super(path);
+        super(path, 0D);
+    }
+
+    public DoubleVariable(String path, double defaultValue) {
+        super(path, defaultValue);
     }
 
     @Override

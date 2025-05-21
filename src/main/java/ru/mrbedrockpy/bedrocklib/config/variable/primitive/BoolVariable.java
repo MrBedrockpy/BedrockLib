@@ -6,7 +6,11 @@ import ru.mrbedrockpy.bedrocklib.config.variable.ConfigVariable;
 public class BoolVariable extends ConfigVariable<Boolean> {
 
     public BoolVariable(String path) {
-        super(path);
+        super(path, false);
+    }
+
+    public BoolVariable(String path, boolean defaultValue) {
+        super(path, false);
     }
 
     @Override

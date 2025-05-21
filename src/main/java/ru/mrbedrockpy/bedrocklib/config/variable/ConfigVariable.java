@@ -1,23 +1,25 @@
 package ru.mrbedrockpy.bedrocklib.config.variable;
 
+import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import java.io.Serializable;
 
 public abstract class ConfigVariable<T> {
 
-    private final String path;
-    private T value;
+    @Getter private final String path;
+    @Getter private final T defaultValue;
+    private T value = null;
 
-    public ConfigVariable(String path) {
+    public ConfigVariable(String path, T defaultValue) {
         this.path = path;
+        this.defaultValue = defaultValue;
     }
 
     public abstract Class<T> getType();
 
     public abstract void load(FileConfiguration config);
     public void save(FileConfiguration config) {
-        config.set(getPath(), get());
+        if (value != null) config.set(getPath(), get());
+        else config.set(getPath(), defaultValue);
     }
 
     public final T get() {
@@ -25,10 +27,6 @@ public abstract class ConfigVariable<T> {
     }
     public final void set(T value) {
         this.value = value;
-    }
-
-    public final String getPath() {
-        return this.path;
     }
 
 }

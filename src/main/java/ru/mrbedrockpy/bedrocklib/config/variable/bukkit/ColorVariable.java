@@ -7,7 +7,11 @@ import ru.mrbedrockpy.bedrocklib.config.variable.ConfigVariable;
 public class ColorVariable extends ConfigVariable<Color> {
 
     public ColorVariable(String path) {
-        super(path);
+        super(path, Color.BLACK);
+    }
+
+    public ColorVariable(String path, Color defaultValue) {
+        super(path, defaultValue);
     }
 
     @Override

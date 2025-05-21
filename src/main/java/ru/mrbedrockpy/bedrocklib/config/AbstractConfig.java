@@ -21,19 +21,16 @@ public abstract class AbstractConfig {
 
     private final List<ConfigVariable<?>> variables;
 
-    public AbstractConfig(Plugin plugin, FileConfiguration config) {
-        this.plugin = plugin;
-        this.config = config;
-        this.name = "config.yml";
-        this.variables = new ArrayList<>();
-        this.load();
-    }
-
     public AbstractConfig(Plugin plugin, String config) {
         File customConfigFile = new File(plugin.getDataFolder(), config);
         if (!customConfigFile.exists()) {
             customConfigFile.getParentFile().mkdirs();
-            plugin.saveResource(config, false);
+            try {
+                if (!customConfigFile.createNewFile()) throw new RuntimeException(new IOException("Failed to create config file: " + config));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            this.save();
         }
         FileConfiguration customConfig = new YamlConfiguration();
         try {
