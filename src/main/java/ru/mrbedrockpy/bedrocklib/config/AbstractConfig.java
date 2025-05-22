@@ -18,11 +18,11 @@ public abstract class AbstractConfig {
     private final Plugin plugin;
     private final FileConfiguration config;
     private final String name;
+    private boolean createdNow = false;
 
     private final List<ConfigVariable<?>> variables;
 
     public AbstractConfig(Plugin plugin, String config) {
-        boolean createdNow = false;
         File customConfigFile = new File(plugin.getDataFolder(), config);
         if (!customConfigFile.exists()) {
             createdNow = true;
@@ -43,12 +43,17 @@ public abstract class AbstractConfig {
         this.config = YamlConfiguration.loadConfiguration(customConfigFile);
         this.name = config;
         this.variables = new ArrayList<>();
-        if (createdNow) this.save();
         this.load();
     }
 
     public <V extends ConfigVariable<?>> V register(V variable) {
         this.variables.add(variable);
+        if (createdNow) variable.save(config);
+        try {
+            this.config.save(plugin.getDataFolder() + "/" + name);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return variable;
     }
 
@@ -59,10 +64,9 @@ public abstract class AbstractConfig {
     public void save() {
         try {
             this.variables.forEach(variable -> variable.save(config));
-            config.save(plugin.getDataFolder() + "/" + name);
-        } catch (IOException | NullPointerException e) {
+            this.config.save(plugin.getDataFolder() + "/" + name);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
 }
