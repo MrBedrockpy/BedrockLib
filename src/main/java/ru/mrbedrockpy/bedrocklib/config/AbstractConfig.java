@@ -32,7 +32,6 @@ public abstract class AbstractConfig {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            this.save();
         }
         FileConfiguration customConfig = new YamlConfiguration();
         try {
