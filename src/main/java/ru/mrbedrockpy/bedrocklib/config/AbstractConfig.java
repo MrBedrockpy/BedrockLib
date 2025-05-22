@@ -22,8 +22,10 @@ public abstract class AbstractConfig {
     private final List<ConfigVariable<?>> variables;
 
     public AbstractConfig(Plugin plugin, String config) {
+        boolean createdNow = false;
         File customConfigFile = new File(plugin.getDataFolder(), config);
         if (!customConfigFile.exists()) {
+            createdNow = true;
             customConfigFile.getParentFile().mkdirs();
             try {
                 if (!customConfigFile.createNewFile()) throw new RuntimeException(new IOException("Failed to create config file: " + config));
@@ -42,6 +44,7 @@ public abstract class AbstractConfig {
         this.config = YamlConfiguration.loadConfiguration(customConfigFile);
         this.name = config;
         this.variables = new ArrayList<>();
+        if (createdNow) this.save();
         this.load();
     }
 
