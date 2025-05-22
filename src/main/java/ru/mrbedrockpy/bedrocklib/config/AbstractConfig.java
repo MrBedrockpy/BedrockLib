@@ -56,8 +56,9 @@ public abstract class AbstractConfig {
 
     public void save() {
         try {
+            this.variables.forEach(variable -> variable.save(config));
             config.save(plugin.getDataFolder() + "/" + name);
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             throw new RuntimeException(e);
         }
     }
