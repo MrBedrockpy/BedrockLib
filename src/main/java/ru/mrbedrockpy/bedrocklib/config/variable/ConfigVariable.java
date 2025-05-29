@@ -12,6 +12,7 @@ public abstract class ConfigVariable<T> {
     public ConfigVariable(String path, T defaultValue) {
         this.path = path;
         this.defaultValue = defaultValue;
+        this.value = defaultValue;
     }
 
     public abstract Class<T> getType();
