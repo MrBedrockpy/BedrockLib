@@ -6,7 +6,7 @@ plugins {
 
 group = 'ru.mrbedrockpy'
 def artifact = 'BedrockLib'
-version = '2.0.5'
+version = '2.1'
 
 repositories {
     mavenCentral()
@@ -26,6 +26,7 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT"
     compileOnly lombok
     annotationProcessor lombok
+    implementation "com.j256.ormlite:ormlite-jdbc:6.1"
 }
 
 def targetJavaVersion = 11
@@ -39,6 +40,7 @@ java {
 }
 
 shadowJar {
+    configurations = project.configurations.named('runtimeClasspath').map { [it] }
     archiveFileName = "${project.name}-${project.version}.jar"
 }
 
