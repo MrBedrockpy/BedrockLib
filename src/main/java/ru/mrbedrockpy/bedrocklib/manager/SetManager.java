@@ -5,15 +5,16 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
+import ru.mrbedrockpy.bedrocklib.BedrockPlugin;
 
 import java.lang.reflect.ParameterizedType;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SetManager<P extends JavaPlugin, I extends ManagerItem<ID>, ID> extends Manager<@NotNull P> {
+public class SetManager<P extends BedrockPlugin, I extends ManagerItem<ID>, ID> extends Manager<P> implements CollectionManager<I, ID> {
 
     protected final Set<I> set = new HashSet<>();
 
@@ -21,12 +22,34 @@ public class SetManager<P extends JavaPlugin, I extends ManagerItem<ID>, ID> ext
         super(plugin);
     }
 
+    @Override
     public boolean register(I item) {
         return set.add(item);
     }
 
+    @Override
+    public boolean registerAll(Collection<I> items) {
+        return set.removeAll(items);
+    }
+
+    @Override
+    public boolean registerAll(I... items) {
+        return registerAll(Arrays.asList(items));
+    }
+
+    @Override
     public boolean unregister(I item) {
         return set.remove(item);
+    }
+
+    @Override
+    public boolean unregisterAll(Collection<I> items) {
+        return set.removeAll(items);
+    }
+
+    @Override
+    public boolean unregisterAll(I... items) {
+        return unregisterAll(Arrays.asList(items));
     }
 
     public Set<I> getItems() {

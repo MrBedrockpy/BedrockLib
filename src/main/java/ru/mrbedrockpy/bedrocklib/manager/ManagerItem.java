@@ -1,7 +1,7 @@
 package ru.mrbedrockpy.bedrocklib.manager;
 
-public abstract class ManagerItem<I> {
+public interface ManagerItem<I> {
 
-    public abstract I getId();
+    I getId();
 
 }
