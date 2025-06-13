@@ -1,14 +1,7 @@
 package ru.mrbedrockpy.bedrocklib.manager;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
 import ru.mrbedrockpy.bedrocklib.BedrockPlugin;
 
-import java.lang.reflect.ParameterizedType;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -61,41 +54,5 @@ public class SetManager<P extends BedrockPlugin, I extends ManagerItem<ID>, ID> 
             if (item.getId().equals(id)) return item;
         }
         return null;
-    }
-
-    public void load(String connection) {
-        try {
-            ConnectionSource source = new JdbcConnectionSource(connection);
-            Dao<I, ID> dao = DaoManager.createDao(source, (Class<I>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]);
-            if (!dao.isTableExists()) {
-                TableUtils.createTable(dao);
-                return;
-            }
-            set.addAll(dao.queryForAll());
-            source.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void save(String connection) {
-        try {
-            ConnectionSource source = new JdbcConnectionSource(connection);
-            Dao<I, ID> dao = DaoManager.createDao(source, (Class<I>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]);
-            if (!dao.isTableExists()) {
-                TableUtils.createTable(dao);
-                return;
-            }
-            set.forEach(item -> {
-                try {
-                    dao.createOrUpdate(item);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            source.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }
