@@ -1,22 +1,13 @@
 package ru.mrbedrockpy.bedrocklib.manager;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
 import ru.mrbedrockpy.bedrocklib.BedrockPlugin;
-import ru.mrbedrockpy.bedrocklib.db.DataBase;
-import ru.mrbedrockpy.bedrocklib.db.DataTable;
 
-import java.lang.reflect.ParameterizedType;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class ListManager<P extends BedrockPlugin, I extends ManagerItem<ID>, ID> extends Manager<P> implements CollectionManager<I, ID> {
+public class ListManager<P extends BedrockPlugin, I extends ManagerItem<ID>, ID> extends Manager<P> implements CollectionManager<I, ID> {
 
     private final List<I> list = new ArrayList<>();
 
