@@ -67,30 +67,6 @@ public class ChatUtil {
         return text;
     }
 
-    public static void sendMessage(CommandSender recipient, String message) {
-        recipient.sendMessage(format(message));
-    }
-
-    public static void sendMessage(CommandSender recipient, List<String> message) {
-        recipient.sendMessage(listToArray(format(message), String.class));
-    }
-
-    public static void sendMessage(CommandSender recipient, String[] message) {
-        recipient.sendMessage(format(message));
-    }
-
-    public static void sendMessage(CommandSender recipient, String message, Map<String, String> placeholdersMap) {
-        recipient.sendMessage(applyPlaceholders(message, placeholdersMap));
-    }
-
-    public static void sendMessage(CommandSender recipient, List<String> message, Map<String, String> placeholdersMap) {
-        recipient.sendMessage(listToArray(applyPlaceholders(message, placeholdersMap), String.class));
-    }
-
-    public static void sendMessage(CommandSender recipient, String[] message, Map<String, String> placeholdersMap) {
-        recipient.sendMessage(applyPlaceholders(message, placeholdersMap));
-    }
-
     public static <T> T[] listToArray(List<T> l, Class<T> type) {
         if (l == null) return null;
         try {
