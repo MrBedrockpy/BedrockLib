@@ -31,7 +31,7 @@ public abstract class ListManager<P extends BedrockPlugin, I extends ManagerItem
 
     @Override
     public boolean registerAll(Collection<I> items) {
-        return list.removeAll(items);
+        return list.addAll(items);
     }
 
     @Override

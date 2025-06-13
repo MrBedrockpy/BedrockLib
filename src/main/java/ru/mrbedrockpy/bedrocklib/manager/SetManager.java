@@ -22,7 +22,7 @@ public class SetManager<P extends BedrockPlugin, I extends ManagerItem<ID>, ID> 
 
     @Override
     public boolean registerAll(Collection<I> items) {
-        return set.removeAll(items);
+        return set.addAll(items);
     }
 
     @Override
