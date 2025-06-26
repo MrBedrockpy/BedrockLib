@@ -6,7 +6,7 @@ plugins {
 
 group = 'ru.mrbedrockpy'
 def artifact = 'BedrockLib'
-version = '3.0.2'
+version = '3.2'
 
 repositories {
     mavenCentral()
@@ -23,13 +23,12 @@ repositories {
 def lombok = "org.projectlombok:lombok:1.18.38"
 dependencies {
     compileOnly "org.jetbrains:annotations:24.0.1"
-    compileOnly "org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT"
+    compileOnly "org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT"
     compileOnly lombok
     annotationProcessor lombok
-    implementation "com.j256.ormlite:ormlite-jdbc:6.1"
 }
 
-def targetJavaVersion = 17
+def targetJavaVersion = 11
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
