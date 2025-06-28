@@ -12,7 +12,6 @@ import java.util.*;
 @Getter
 public class DataBase<P extends BedrockPlugin> extends ListManager<P, DataTable<P, ? extends ManagerItem<?>, ?>, Class<?>> {
 
-    private final List<DataTable<P, ?, ?>> tables = new ArrayList<>();
     private final SerializeConfig<? extends BedrockPlugin> serializeConfig;
     private final File file;
 
@@ -20,30 +19,32 @@ public class DataBase<P extends BedrockPlugin> extends ListManager<P, DataTable<
         super(plugin);
         this.file = file;
         this.serializeConfig = serializeConfig;
+        load();
     }
 
     public <T extends ManagerItem<ID>, ID> DataTable<P, T, ID> createTableIfNotExists(Class<T> dataType) {
         DataTable<P, T, ID> table = getTable(dataType);
         if (table != null) return table;
         table = new DataTable<>(serializeConfig, dataType, List.of());
-        tables.add(table);
+        register(table);
         return table;
     }
 
     public <T extends ManagerItem<ID>, ID> DataTable<P, T, ID> getTable(Class<T> clazz) {
-        for (DataTable<P, ?, ?> table: tables) {
+        for (DataTable<P, ?, ?> table: getItems()) {
             if (table.getDataType().equals(clazz)) return (DataTable<P, T, ID>) table;
         }
         return null;
     }
 
     public List<DataTable<P, ?, ?>> load() {
-        tables.clear();
+        list.clear();
         StringBuilder sb = new StringBuilder();
         try {
+            file.getParentFile().mkdirs();
             if (!file.exists()) {
                 if (!file.createNewFile()) throw new RuntimeException("Failed to create file: " + file.getAbsolutePath());
-                return tables;
+                return getItems();
             }
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) sb.append(scanner.nextLine()).append("\n");
@@ -55,19 +56,20 @@ public class DataBase<P extends BedrockPlugin> extends ListManager<P, DataTable<
             String[] arrayTable = stringTable.split("\n");
             try {
                 Class<?> dataType = Class.forName(arrayTable[0]);
-                tables.add(new DataTable<>(serializeConfig, dataType, Arrays.asList(arrayTable).subList(1, arrayTable.length)));
+                register(new DataTable<>(serializeConfig, dataType, Arrays.asList(arrayTable).subList(1, arrayTable.length)));
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }
-        return tables;
+        return getItems();
     }
 
     public void save() {
         try {
+            file.getParentFile().mkdirs();
             if (!file.exists()) if (!file.createNewFile()) throw new RuntimeException("Failed to create file: " + file.getAbsolutePath());
             List<String> stringTables = new ArrayList<>();
-            for (DataTable<P, ?, ?> dataTable: tables) stringTables.add(dataTable.getDataType().getName() + "\n" + String.join("\n", dataTable.serialize()));
+            for (DataTable<P, ?, ?> dataTable: getItems()) stringTables.add(dataTable.getDataType().getName() + "\n" + String.join("\n", dataTable.serialize()));
             FileWriter fw = new FileWriter(file);
             fw.write(Base64.getEncoder().encodeToString(String.join("\n\n", stringTables).getBytes()));
             fw.close();

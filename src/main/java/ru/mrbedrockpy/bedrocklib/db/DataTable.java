@@ -4,15 +4,17 @@ import lombok.Getter;
 import ru.mrbedrockpy.bedrocklib.BedrockPlugin;
 import ru.mrbedrockpy.bedrocklib.SerializeConfig;
 import ru.mrbedrockpy.bedrocklib.Serializer;
+import ru.mrbedrockpy.bedrocklib.manager.CollectionManager;
 import ru.mrbedrockpy.bedrocklib.manager.ManagerItem;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 @Getter
-public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> implements ManagerItem<Class<?>> {
+public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> implements CollectionManager<T, ID>, ManagerItem<Class<?>> {
 
     private final List<T> dtos = new ArrayList<>();
     private final SerializeConfig<? extends BedrockPlugin> serializeConfig;
@@ -69,6 +71,36 @@ public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> i
         } catch (Exception e) {
             throw new RuntimeException("Deserialization error" + e.getMessage());
         }
+    }
+
+    @Override
+    public boolean register(T item) {
+        return this.dtos.add(item);
+    }
+
+    @Override
+    public boolean registerAll(Collection<T> items) {
+        return this.dtos.addAll(items);
+    }
+
+    @Override
+    public boolean registerAll(T... items) {
+        return this.registerAll(Arrays.asList(items));
+    }
+
+    @Override
+    public boolean unregister(T item) {
+        return this.dtos.remove(item);
+    }
+
+    @Override
+    public boolean unregisterAll(Collection<T> items) {
+        return this.dtos.removeAll(items);
+    }
+
+    @Override
+    public boolean unregisterAll(T... items) {
+        return this.registerAll(Arrays.asList(items));
     }
 
     @Override

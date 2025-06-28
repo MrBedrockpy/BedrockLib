@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ListManager<P extends BedrockPlugin, I extends ManagerItem<ID>, ID> extends Manager<P> implements CollectionManager<I, ID> {
 
-    private final List<I> list = new ArrayList<>();
+    protected final List<I> list = new ArrayList<>();
 
     public ListManager(P plugin) {
         super(plugin);
