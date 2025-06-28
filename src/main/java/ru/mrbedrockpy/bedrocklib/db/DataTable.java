@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Getter
 public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> implements CollectionManager<T, ID>, ManagerItem<Class<?>> {
@@ -75,12 +76,17 @@ public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> i
 
     @Override
     public boolean register(T item) {
+        if (getById(item.getId()) != null) return false;
         return this.dtos.add(item);
     }
 
     @Override
     public boolean registerAll(Collection<T> items) {
-        return this.dtos.addAll(items);
+        AtomicBoolean success = new AtomicBoolean(true);
+        items.forEach(item -> {
+            if (!this.register(item)) success.set(false);
+        });
+        return success.get();
     }
 
     @Override
