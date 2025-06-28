@@ -45,14 +45,15 @@ public class ListManager<P extends BedrockPlugin, I extends ManagerItem<ID>, ID>
         return unregisterAll(Arrays.asList(items));
     }
 
-    public List<I> getItems() {
-        return new ArrayList<>(list);
-    }
-
+    @Override
     public I getById(ID id) {
         for (I item: list) {
             if (item.getId().equals(id)) return item;
         }
         return null;
+    }
+
+    public List<I> getItems() {
+        return new ArrayList<>(list);
     }
 }

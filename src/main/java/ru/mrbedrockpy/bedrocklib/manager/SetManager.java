@@ -45,14 +45,15 @@ public class SetManager<P extends BedrockPlugin, I extends ManagerItem<ID>, ID> 
         return unregisterAll(Arrays.asList(items));
     }
 
-    public Set<I> getItems() {
-        return new HashSet<>(set);
-    }
-
+    @Override
     public I getById(ID id) {
         for (I item: set) {
             if (item.getId().equals(id)) return item;
         }
         return null;
+    }
+
+    public Set<I> getItems() {
+        return new HashSet<>(set);
     }
 }

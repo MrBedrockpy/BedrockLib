@@ -69,7 +69,7 @@ public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> i
             if (partIndex != parts.length) throw new RuntimeException("Unused data parts detected");
             dtos.add(instance);
         } catch (Exception e) {
-            throw new RuntimeException("Deserialization error" + e.getMessage());
+            throw new RuntimeException("Deserialization error: " + e.getMessage());
         }
     }
 
@@ -101,6 +101,14 @@ public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> i
     @Override
     public boolean unregisterAll(T... items) {
         return this.registerAll(Arrays.asList(items));
+    }
+
+    @Override
+    public T getById(ID id) {
+        for (T t: getDtos()) {
+            if (t.getId().equals(id)) return t;
+        }
+        return null;
     }
 
     @Override

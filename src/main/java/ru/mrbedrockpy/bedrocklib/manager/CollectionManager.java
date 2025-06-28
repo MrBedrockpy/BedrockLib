@@ -12,4 +12,6 @@ public interface CollectionManager<I extends ManagerItem<ID>, ID> {
     boolean unregisterAll(Collection<I> items);
     boolean unregisterAll(I... items);
 
+    I getById(ID id);
+
 }
