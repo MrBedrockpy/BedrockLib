@@ -4,7 +4,6 @@ import lombok.Getter;
 import ru.mrbedrockpy.bedrocklib.BedrockPlugin;
 import ru.mrbedrockpy.bedrocklib.SerializeConfig;
 import ru.mrbedrockpy.bedrocklib.Serializer;
-import ru.mrbedrockpy.bedrocklib.manager.ListManager;
 import ru.mrbedrockpy.bedrocklib.manager.ManagerItem;
 
 import java.lang.reflect.Field;
@@ -13,14 +12,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
-public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> extends ListManager<P, T, ID> implements ManagerItem<Class<?>> {
+public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> implements ManagerItem<Class<?>> {
 
     private final List<T> dtos = new ArrayList<>();
     private final SerializeConfig<? extends BedrockPlugin> serializeConfig;
     private final Class<T> dataType;
 
-    public DataTable(P plugin, SerializeConfig<? extends BedrockPlugin> serializeConfig, Class<?> dataType, List<String> data) {
-        super(plugin);
+    public DataTable(SerializeConfig<? extends BedrockPlugin> serializeConfig, Class<?> dataType, List<String> data) {
         this.serializeConfig = serializeConfig;
         this.dataType = (Class<T>) dataType;
         data.forEach(this::parseFromData);

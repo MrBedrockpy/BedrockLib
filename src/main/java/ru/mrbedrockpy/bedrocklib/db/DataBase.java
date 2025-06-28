@@ -25,7 +25,7 @@ public class DataBase<P extends BedrockPlugin> extends ListManager<P, DataTable<
     public <T extends ManagerItem<ID>, ID> DataTable<P, T, ID> createTableIfNotExists(Class<T> dataType) {
         DataTable<P, T, ID> table = getTable(dataType);
         if (table != null) return table;
-        table = new DataTable<>(getPlugin(), serializeConfig, dataType, List.of());
+        table = new DataTable<>(serializeConfig, dataType, List.of());
         tables.add(table);
         return table;
     }
@@ -55,7 +55,7 @@ public class DataBase<P extends BedrockPlugin> extends ListManager<P, DataTable<
             String[] arrayTable = stringTable.split("\n");
             try {
                 Class<?> dataType = Class.forName(arrayTable[0]);
-                tables.add(new DataTable<>(getPlugin(), serializeConfig, dataType, Arrays.asList(arrayTable).subList(1, arrayTable.length)));
+                tables.add(new DataTable<>(serializeConfig, dataType, Arrays.asList(arrayTable).subList(1, arrayTable.length)));
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
