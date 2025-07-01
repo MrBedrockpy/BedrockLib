@@ -1,5 +1,6 @@
-package ru.mrbedrockpy.bedrocklib;
+package ru.mrbedrockpy.bedrocklib.serialization;
 
+import ru.mrbedrockpy.bedrocklib.BedrockPlugin;
 import ru.mrbedrockpy.bedrocklib.manager.ListManager;
 
 public class SerializeConfig<P extends BedrockPlugin> extends ListManager<P, Serializer<?>, Class<?>> {

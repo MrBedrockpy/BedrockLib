@@ -3,6 +3,7 @@ package ru.mrbedrockpy.bedrocklib;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.mrbedrockpy.bedrocklib.serialization.SerializeConfig;
 
 @Getter
 @Setter

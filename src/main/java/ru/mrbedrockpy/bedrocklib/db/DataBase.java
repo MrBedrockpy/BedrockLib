@@ -2,7 +2,7 @@ package ru.mrbedrockpy.bedrocklib.db;
 
 import lombok.Getter;
 import ru.mrbedrockpy.bedrocklib.BedrockPlugin;
-import ru.mrbedrockpy.bedrocklib.SerializeConfig;
+import ru.mrbedrockpy.bedrocklib.serialization.SerializeConfig;
 import ru.mrbedrockpy.bedrocklib.manager.ListManager;
 import ru.mrbedrockpy.bedrocklib.manager.ManagerItem;
 

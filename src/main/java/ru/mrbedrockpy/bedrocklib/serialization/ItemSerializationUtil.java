@@ -1,4 +1,4 @@
-package ru.mrbedrockpy.bedrocklib.config;
+package ru.mrbedrockpy.bedrocklib.serialization;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
@@ -10,41 +10,45 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 
 public class ItemSerializationUtil {
 
     public static String itemStackArrayToBase64(ItemStack[] items) throws IllegalStateException {
         try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            BukkitObjectOutputStream bukkitOutputStream = new BukkitObjectOutputStream(byteArrayOutputStream);
 
-            dataOutput.writeInt(items.length);
-
-            for (int i = 0; i < items.length; i++) {
-                dataOutput.writeObject(items[i]);
+            bukkitOutputStream.writeInt(items.length);
+            for (ItemStack item : items) {
+                bukkitOutputStream.writeObject(item);
             }
+            bukkitOutputStream.close();
 
-            dataOutput.close();
-            return Base64Coder.encodeLines(outputStream.toByteArray());
+            return Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
         } catch (Exception e) {
-            throw new IllegalStateException("Unable to save item stacks.", e);
+            Bukkit.getLogger().severe("Failed to serialize inventory: " + e);
+            return null;
         }
     }
 
-    public static ItemStack[] itemStackArrayFromBase64(String data) throws IOException {
+    public static ItemStack[] itemStackArrayFromBase64(String dataString) throws IOException {
         try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
-            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-            ItemStack[] items = new ItemStack[dataInput.readInt()];
+            byte[] data = Base64.getDecoder().decode(dataString);
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
+            BukkitObjectInputStream bukkitInputStream = new BukkitObjectInputStream(byteArrayInputStream);
 
-            for (int i = 0; i < items.length; i++) {
-                items[i] = (ItemStack) dataInput.readObject();
+            int length = bukkitInputStream.readInt();
+            ItemStack[] items = new ItemStack[length];
+            for (int i = 0; i < length; i++) {
+                items[i] = (ItemStack) bukkitInputStream.readObject();
             }
+            bukkitInputStream.close();
 
-            dataInput.close();
             return items;
-        } catch (ClassNotFoundException e) {
-            throw new IOException("Unable to decode class type.", e);
+        } catch (Exception e) {
+            Bukkit.getLogger().severe("Failed to deserialize inventory: " + e);
+            return new ItemStack[0];
         }
     }
 

@@ -1,4 +1,4 @@
-package ru.mrbedrockpy.bedrocklib;
+package ru.mrbedrockpy.bedrocklib.serialization;
 
 import lombok.AllArgsConstructor;
 import ru.mrbedrockpy.bedrocklib.manager.ManagerItem;
