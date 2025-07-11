@@ -14,6 +14,14 @@ import java.util.Base64;
 
 public class ItemSerializationUtil {
 
+    private static String validateSerialize(String s) {
+        return s.replace('\n', '|');
+    }
+
+    private static String validateDeserialize(String s) {
+        return s.replace('|', '\n');
+    }
+
     public static String itemStackArrayToBase64(ItemStack[] items) throws IllegalStateException {
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -25,16 +33,16 @@ public class ItemSerializationUtil {
             }
             bukkitOutputStream.close();
 
-            return Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
+            return validateSerialize(Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray()));
         } catch (Exception e) {
             Bukkit.getLogger().severe("Failed to serialize inventory: " + e);
-            return null;
+            return "";
         }
     }
 
     public static ItemStack[] itemStackArrayFromBase64(String dataString) throws IOException {
         try {
-            byte[] data = Base64.getDecoder().decode(dataString);
+            byte[] data = Base64.getDecoder().decode(validateDeserialize(dataString));
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
             BukkitObjectInputStream bukkitInputStream = new BukkitObjectInputStream(byteArrayInputStream);
 
@@ -64,7 +72,7 @@ public class ItemSerializationUtil {
             }
 
             dataOutput.close();
-            return Base64Coder.encodeLines(outputStream.toByteArray());
+            return validateSerialize(Base64Coder.encodeLines(outputStream.toByteArray()));
         } catch (Exception e) {
             throw new IllegalStateException("Unable to save item stacks.", e);
         }
@@ -73,7 +81,7 @@ public class ItemSerializationUtil {
     public static Inventory fromBase64(String data) {
         if (data == null) return null;
         try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(validateDeserialize(data)));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
             Inventory inventory = Bukkit.getServer().createInventory(null, dataInput.readInt());
 
@@ -89,12 +97,12 @@ public class ItemSerializationUtil {
     }
 
     public static String itemStackToBase64(ItemStack item) {
-        return itemStackArrayToBase64(new ItemStack[]{item});
+        return validateSerialize(itemStackArrayToBase64(new ItemStack[]{item}));
     }
 
     public static ItemStack itemStackFromBase64(String data) {
         try {
-            return itemStackArrayFromBase64(data)[0];
+            return itemStackArrayFromBase64(validateDeserialize(data))[0];
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
