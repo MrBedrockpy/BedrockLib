@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import ru.mrbedrockpy.bedrocklib.BedrockPlugin;
 import ru.mrbedrockpy.bedrocklib.config.variable.ConfigVariable;
-import ru.mrbedrockpy.bedrocklib.manager.RunnableManager;
+import ru.mrbedrockpy.bedrocklib.manager.Manager;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 @Getter
-public abstract class AbstractConfig<P extends BedrockPlugin> extends RunnableManager<P> {
+public abstract class AbstractConfig<P extends BedrockPlugin> extends Manager<P> {
 
     private final FileConfiguration config;
     private final String name;
