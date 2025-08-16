@@ -44,7 +44,12 @@ public abstract class AbstractConfig<P extends BedrockPlugin> extends Manager<P>
         this.config = YamlConfiguration.loadConfiguration(customConfigFile);
         this.name = config;
         this.variables = new ArrayList<>();
-        this.load();
+        this.init();
+    }
+
+    public void init() {
+        if (createdNow) save();
+        else load();
     }
 
     public <V extends ConfigVariable<?>> V register(V variable) {
@@ -65,7 +70,7 @@ public abstract class AbstractConfig<P extends BedrockPlugin> extends Manager<P>
     public void save() {
         try {
             this.variables.forEach(variable -> variable.save(config));
-            this.config.save(getPlugin().getDataFolder() + "/" + name);
+            this.config.save(new File(getPlugin().getDataFolder(), name));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

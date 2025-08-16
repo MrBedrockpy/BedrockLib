@@ -20,7 +20,7 @@ public class IntVariable extends ConfigVariable<Integer> {
 
     @Override
     public void load(FileConfiguration config) {
-        set(config.getInt(getPath()));
+        set(config.getInt(getPath(), getDefaultValue()));
     }
 
 }

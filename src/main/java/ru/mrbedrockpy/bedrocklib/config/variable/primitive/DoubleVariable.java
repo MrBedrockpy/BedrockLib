@@ -20,7 +20,7 @@ public class DoubleVariable extends ConfigVariable<Double> {
 
     @Override
     public void load(FileConfiguration config) {
-        set(config.getDouble(getPath()));
+        set(config.getDouble(getPath(), getDefaultValue()));
     }
 
 }

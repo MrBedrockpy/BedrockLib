@@ -20,7 +20,7 @@ public class LongVariable extends ConfigVariable<Long> {
 
     @Override
     public void load(FileConfiguration config) {
-        set(config.getLong(getPath()));
+        set(config.getLong(getPath(), getDefaultValue()));
     }
 
 }

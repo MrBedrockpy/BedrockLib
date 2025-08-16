@@ -19,8 +19,7 @@ public abstract class ConfigVariable<T> {
 
     public abstract void load(FileConfiguration config);
     public void save(FileConfiguration config) {
-        if (value != null) config.set(getPath(), get());
-        else config.set(getPath(), defaultValue);
+        config.set(getPath(), get() != null ? get() : defaultValue);
     }
 
     public final T get() {

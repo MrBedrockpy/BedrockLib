@@ -20,7 +20,7 @@ public class StringVariable extends ConfigVariable<String> {
 
     @Override
     public void load(FileConfiguration config) {
-        set(config.getString(getPath()));
+        set(config.getString(getPath(), getDefaultValue()));
     }
 
 }

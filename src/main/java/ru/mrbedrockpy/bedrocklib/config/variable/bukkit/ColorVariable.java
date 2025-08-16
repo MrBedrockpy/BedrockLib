@@ -21,6 +21,6 @@ public class ColorVariable extends ConfigVariable<Color> {
 
     @Override
     public void load(FileConfiguration config) {
-        set(config.getColor(getPath()));
+        set(config.getColor(getPath(), getDefaultValue()));
     }
 }

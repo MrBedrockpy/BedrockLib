@@ -20,7 +20,7 @@ public class BoolVariable extends ConfigVariable<Boolean> {
 
     @Override
     public void load(FileConfiguration config) {
-        set(config.getBoolean(getPath()));
+        set(config.getBoolean(getPath(), getDefaultValue()));
     }
 
 }
