@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Getter
 public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> implements CollectionManager<T, ID>, ManagerItem<Class<?>> {
 
-    private static final String SPLIT_SYMBOL = "\\|";
+    private static final String SPLIT_SYMBOL = "&";
 
     private final List<T> dtos = new ArrayList<>();
     private final SerializeConfig<? extends BedrockPlugin> serializeConfig;
