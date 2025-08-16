@@ -17,6 +17,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Getter
 public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> implements CollectionManager<T, ID>, ManagerItem<Class<?>> {
 
+    private static final String SPLIT_SYMBOL = "|";
+
     private final List<T> dtos = new ArrayList<>();
     private final SerializeConfig<? extends BedrockPlugin> serializeConfig;
     private final Class<T> dataType;
@@ -42,7 +44,7 @@ public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> i
                     }
                 });
             });
-            list.add(String.join(":", fields));
+            list.add(String.join(SPLIT_SYMBOL, fields));
         });
         return list;
     }
@@ -53,11 +55,11 @@ public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> i
 
     private void parseFromData(String data) {
         try {
-            String[] parts = data.split(":");
+            String[] parts = data.split(SPLIT_SYMBOL);
             T instance = dataType.getDeclaredConstructor().newInstance();
             Field[] fields = dataType.getDeclaredFields();
             int partIndex = 0;
-            for (Field field : fields) {
+            for (Field field: fields) {
                 Class<?> fieldType = field.getType();
                 Serializer<?> serializer = serializeConfig.getById(fieldType);
                 if (serializer == null) throw new RuntimeException("Unsupported type: " + fieldType.getName());

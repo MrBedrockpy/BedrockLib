@@ -6,13 +6,13 @@ plugins {
 
 group = 'ru.mrbedrockpy'
 def artifact = 'BedrockLib'
-version = '3.3.5'
+version = '3.4'
 
 repositories {
     mavenCentral()
     maven {
-        name = "spigotmc-repo"
-        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+        name = "papermc-repo"
+        url = "https://repo.papermc.io/repository/maven-public/"
     }
     maven {
         name = "sonatype"
@@ -23,12 +23,12 @@ repositories {
 def lombok = "org.projectlombok:lombok:1.18.38"
 dependencies {
     compileOnly "org.jetbrains:annotations:24.0.1"
-    compileOnly "org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT"
+    compileOnly "io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT"
     compileOnly lombok
     annotationProcessor lombok
 }
 
-def targetJavaVersion = 11
+def targetJavaVersion = 17
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
