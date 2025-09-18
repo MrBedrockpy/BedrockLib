@@ -20,8 +20,7 @@ public class Serializer<T> implements ManagerItem<Class<?>> {
         return deserializer.apply(data);
     }
 
-    @Override
-    public Class<?> getId() {
+    public Class<T> getId() {
         return dataType;
     }
 }

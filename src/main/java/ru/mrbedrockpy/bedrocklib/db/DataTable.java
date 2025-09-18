@@ -59,7 +59,7 @@ public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> i
             T instance = dataType.getDeclaredConstructor().newInstance();
             Field[] fields = dataType.getDeclaredFields();
             int partIndex = 0;
-            for (Field field: fields) {
+            for (Field field : fields) {
                 Class<?> fieldType = field.getType();
                 Serializer<?> serializer = serializeConfig.getById(fieldType);
                 if (serializer == null) throw new RuntimeException("Unsupported type: " + fieldType.getName());
@@ -113,10 +113,15 @@ public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> i
 
     @Override
     public T getById(ID id) {
-        for (T t: getDtos()) {
+        for (T t : getDtos()) {
             if (t.getId().equals(id)) return t;
         }
         return null;
+    }
+
+    @Override
+    public void clear() {
+        this.dtos.clear();
     }
 
     @Override

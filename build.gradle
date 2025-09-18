@@ -6,7 +6,8 @@ plugins {
 
 group = 'ru.mrbedrockpy'
 def artifact = 'BedrockLib'
-version = '3.4.4'
+
+version = '3.5'
 
 repositories {
     mavenCentral()

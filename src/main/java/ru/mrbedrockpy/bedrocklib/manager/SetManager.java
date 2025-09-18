@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SetManager<P extends BedrockPlugin, I extends ManagerItem<ID>, ID> extends Manager<P> implements CollectionManager<I, ID> {
+public class SetManager<P extends BedrockPlugin<P>, I extends ManagerItem<ID>, ID> extends Manager<P> implements CollectionManager<I, ID> {
 
     protected final Set<I> set = new HashSet<>();
 
@@ -46,8 +46,13 @@ public class SetManager<P extends BedrockPlugin, I extends ManagerItem<ID>, ID> 
     }
 
     @Override
+    public void clear() {
+        set.clear();
+    }
+
+    @Override
     public I getById(ID id) {
-        for (I item: set) {
+        for (I item : set) {
             if (item.getId().equals(id)) return item;
         }
         return null;
