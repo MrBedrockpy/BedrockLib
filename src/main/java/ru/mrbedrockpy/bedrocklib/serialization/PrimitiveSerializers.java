@@ -1,12 +1,11 @@
 package ru.mrbedrockpy.bedrocklib.serialization;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PrimitiveSerializers {
 
-    public static List<Serializer<?>> getAllPrimitiveSerializers() {
+    public static List<Serializer<?>> getPrimitiveSerializers() {
         return new ArrayList<>(List.of(
                 getPrimitiveByteSerializer(),
                 getPrimitiveShortSerializer(),

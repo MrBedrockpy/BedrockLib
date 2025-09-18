@@ -16,6 +16,7 @@ public interface ManagerWithDatabase<P extends BedrockPlugin, I extends ManagerI
 
     default void save(DataBase<P> dataBase, Class<I> itemType, Collection<I> items) {
         DataTable<P, I, ID> table = dataBase.createTableIfNotExists(itemType);
+        table.clear();
         table.registerAll(items);
     }
 }

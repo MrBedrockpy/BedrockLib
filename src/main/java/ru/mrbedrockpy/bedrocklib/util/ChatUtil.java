@@ -1,41 +1,42 @@
-package ru.mrbedrockpy.bedrocklib;
+package ru.mrbedrockpy.bedrocklib.util;
 
+import lombok.experimental.UtilityClass;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Map;
 
+@UtilityClass
 public class ChatUtil {
 
-    public static String format(char colorChar, String text) {
+    public String format(char colorChar, String text) {
         return ChatColor.translateAlternateColorCodes(colorChar, text);
     }
 
-    public static String format(String text) {
+    public String format(String text) {
         return format('&', text);
     }
 
-    public static List<String> format(char colorChar, List<String> text) {
+    public List<String> format(char colorChar, List<String> text) {
         text.replaceAll(line -> ChatColor.translateAlternateColorCodes(colorChar, line));
         return text;
     }
 
-    public static List<String> format(List<String> text) {
+    public List<String> format(List<String> text) {
         return format('&', text);
     }
 
-    public static String[] format(char colorChar, String[] text) {
+    public String[] format(char colorChar, String[] text) {
         for (int i = 0; i < text.length; i++) text[i] = ChatColor.translateAlternateColorCodes(colorChar, text[i]);
         return text;
     }
 
-    public static String[] format(String... text) {
+    public String[] format(String... text) {
         return format('&', text);
     }
 
-    public static String applyPlaceholders(String text, Map<String, String> placeholdersMap) {
+    public String applyPlaceholders(String text, Map<String, String> placeholdersMap) {
         for (String arg : placeholdersMap.keySet()) {
             text = text.replaceAll(arg, placeholdersMap.get(arg));
         }
@@ -43,7 +44,7 @@ public class ChatUtil {
         return format(text);
     }
 
-    public static List<String> applyPlaceholders(List<String> text, Map<String, String> placeholdersMap) {
+    public List<String> applyPlaceholders(List<String> text, Map<String, String> placeholdersMap) {
         for (int i = 0; i < text.size(); i++) {
             String line = text.get(i);
 
@@ -57,7 +58,7 @@ public class ChatUtil {
         return text;
     }
 
-    public static String[] applyPlaceholders(String[] text, Map<String, String> placeholdersMap) {
+    public String[] applyPlaceholders(String[] text, Map<String, String> placeholdersMap) {
         for (int i = 0; i < text.length; i++) {
             for (String arg : placeholdersMap.keySet()) {
                 text[i] = format(text[i].replaceAll(arg, placeholdersMap.get(arg)));
@@ -67,7 +68,7 @@ public class ChatUtil {
         return text;
     }
 
-    public static <T> T[] listToArray(List<T> l, Class<T> type) {
+    public <T> T[] listToArray(List<T> l, Class<T> type) {
         if (l == null) return null;
         try {
             T[] arr = (T[]) Array.newInstance(type, l.size());

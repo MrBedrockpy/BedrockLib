@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class ListManager<P extends BedrockPlugin, I extends ManagerItem<ID>, ID> extends Manager<P> implements CollectionManager<I, ID> {
+public class ListManager<P extends BedrockPlugin<P>, I extends ManagerItem<ID>, ID> extends Manager<P> implements CollectionManager<I, ID> {
 
     protected final List<I> list = new ArrayList<>();
 
@@ -47,10 +47,15 @@ public class ListManager<P extends BedrockPlugin, I extends ManagerItem<ID>, ID>
 
     @Override
     public I getById(ID id) {
-        for (I item: list) {
+        for (I item : list) {
             if (item.getId().equals(id)) return item;
         }
         return null;
+    }
+
+    @Override
+    public void clear() {
+        list.clear();
     }
 
     public List<I> getItems() {

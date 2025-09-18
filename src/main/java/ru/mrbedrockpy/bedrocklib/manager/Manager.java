@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 import ru.mrbedrockpy.bedrocklib.BedrockPlugin;
 
 @Getter
-public abstract class Manager<P extends BedrockPlugin> implements Listener {
+public abstract class Manager<P extends BedrockPlugin<P>> implements Listener {
 
     private final P plugin;
 
