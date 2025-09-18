@@ -6,7 +6,7 @@ import ru.mrbedrockpy.bedrocklib.db.DataTable;
 
 import java.util.Collection;
 
-public interface ManagerWithDatabase<P extends BedrockPlugin, I extends ManagerItem<ID>, ID> {
+public interface ManagerWithDatabase<P extends BedrockPlugin<P>, I extends ManagerItem<ID>, ID> {
 
     default void load(DataBase<P> dataBase, Class<I> itemType, Collection<I> items) {
         DataTable<P, I, ID> table = dataBase.createTableIfNotExists(itemType);

@@ -6,7 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import ru.mrbedrockpy.bedrocklib.BedrockPlugin;
 
 @Getter
-public abstract class RunnableManager<P extends BedrockPlugin> extends BukkitRunnable implements Listener {
+public abstract class RunnableManager<P extends BedrockPlugin<P>> extends BukkitRunnable implements Listener {
 
     private final P plugin;
 
