@@ -41,16 +41,7 @@ public class DataBase<P extends BedrockPlugin<P>> extends ListManager<P, DataTab
     public void load() {
         list.clear();
         String text = FileUtil.getTextFile(file);
-        if (text == null) {
-            file.getParentFile().mkdirs();
-            try {
-                if (!file.exists() && !file.createNewFile())
-                    throw new RuntimeException("Failed to create file: " + file.getAbsolutePath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
+        if (text == null) return;
         text = text.trim();
         for (String stringTable : new String(Base64.getDecoder().decode(text)).split("\n\n")) {
             String[] arrayTable = stringTable.split("\n");
