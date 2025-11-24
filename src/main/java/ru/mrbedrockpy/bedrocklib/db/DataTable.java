@@ -3,7 +3,7 @@ package ru.mrbedrockpy.bedrocklib.db;
 import lombok.Getter;
 import ru.mrbedrockpy.bedrocklib.BedrockPlugin;
 import ru.mrbedrockpy.bedrocklib.serialization.SerializeConfig;
-import ru.mrbedrockpy.bedrocklib.serialization.Serializer;
+import ru.mrbedrockpy.bedrocklib.serialization.string.StringSerializer;
 import ru.mrbedrockpy.bedrocklib.manager.CollectionManager;
 import ru.mrbedrockpy.bedrocklib.manager.ManagerItem;
 
@@ -15,15 +15,15 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Getter
-public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> implements CollectionManager<T, ID>, ManagerItem<Class<?>> {
+public class DataTable<P extends BedrockPlugin<P>, T extends ManagerItem<ID>, ID> implements CollectionManager<T, ID>, ManagerItem<Class<?>> {
 
     private static final String SPLIT_SYMBOL = "&";
 
     private final List<T> dtos = new ArrayList<>();
-    private final SerializeConfig<? extends BedrockPlugin> serializeConfig;
+    private final SerializeConfig<? extends BedrockPlugin<P>> serializeConfig;
     private final Class<T> dataType;
 
-    public DataTable(SerializeConfig<? extends BedrockPlugin> serializeConfig, Class<?> dataType, List<String> data) {
+    public DataTable(SerializeConfig<? extends BedrockPlugin<P>> serializeConfig, Class<?> dataType, List<String> data) {
         this.serializeConfig = serializeConfig;
         this.dataType = (Class<T>) dataType;
         data.forEach(this::parseFromData);
@@ -38,7 +38,7 @@ public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> i
                 serializeConfig.getItems().forEach(serializer -> {
                     if (!field.getType().equals(serializer.getId())) return;
                     try {
-                        fields.add(serialize((Serializer<T>) serializer, field.get(dto)));
+                        fields.add(serialize((StringSerializer<T>) serializer, field.get(dto)));
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
@@ -49,7 +49,7 @@ public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> i
         return list;
     }
 
-    private <F> String serialize(Serializer<F> serializer, Object value) {
+    private <F> String serialize(StringSerializer<F> serializer, Object value) {
         return serializer.serialize((F) value);
     }
 
@@ -61,7 +61,7 @@ public class DataTable<P extends BedrockPlugin, T extends ManagerItem<ID>, ID> i
             int partIndex = 0;
             for (Field field : fields) {
                 Class<?> fieldType = field.getType();
-                Serializer<?> serializer = serializeConfig.getById(fieldType);
+                StringSerializer<?> serializer = serializeConfig.getById(fieldType);
                 if (serializer == null) throw new RuntimeException("Unsupported type: " + fieldType.getName());
                 if (partIndex >= parts.length) throw new RuntimeException("Not enough data parts for field: " + field.getName());
                 String part = parts[partIndex++];

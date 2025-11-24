@@ -28,7 +28,7 @@ public class FileUtil {
             if (file.isDirectory()) return;
             if (!file.exists()) {
                 file.getParentFile().mkdirs();
-                if (file.createNewFile()) return;
+                file.createNewFile();
             }
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             writer.flush();

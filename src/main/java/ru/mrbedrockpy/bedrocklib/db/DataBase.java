@@ -5,6 +5,7 @@ import ru.mrbedrockpy.bedrocklib.BedrockPlugin;
 import ru.mrbedrockpy.bedrocklib.serialization.SerializeConfig;
 import ru.mrbedrockpy.bedrocklib.manager.ListManager;
 import ru.mrbedrockpy.bedrocklib.manager.ManagerItem;
+import ru.mrbedrockpy.bedrocklib.util.FileUtil;
 
 import java.io.*;
 import java.util.*;
@@ -37,44 +38,43 @@ public class DataBase<P extends BedrockPlugin<P>> extends ListManager<P, DataTab
         return null;
     }
 
-    public List<DataTable<P, ?, ?>> load() {
+    public void load() {
         list.clear();
-        StringBuilder sb = new StringBuilder();
-        try {
+        String text = FileUtil.getTextFile(file);
+        if (text == null) {
             file.getParentFile().mkdirs();
-            if (!file.exists()) {
-                if (!file.createNewFile()) throw new RuntimeException("Failed to create file: " + file.getAbsolutePath());
-                return getItems();
-            }
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) sb.append(scanner.nextLine()).append("\n");
-            scanner.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        for (String stringTable : new String(Base64.getDecoder().decode(sb.toString().trim())).split("\n\n")) {
-            String[] arrayTable = stringTable.split("\n");
             try {
-                Class<?> dataType = Class.forName(arrayTable[0]);
-                register(new DataTable<>(serializeConfig, dataType, Arrays.asList(arrayTable).subList(1, arrayTable.length)));
-            } catch (ClassNotFoundException e) {
+                if (!file.exists() && !file.createNewFile())
+                    throw new RuntimeException("Failed to create file: " + file.getAbsolutePath());
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            return;
         }
-        return getItems();
+        text = text.trim();
+        for (String stringTable : new String(Base64.getDecoder().decode(text)).split("\n\n")) {
+            String[] arrayTable = stringTable.split("\n");
+            if (arrayTable.length < 2) continue;
+            try {
+                Class<?> dataType = Class.forName(arrayTable[0]);
+                register(new DataTable<>(
+                        serializeConfig, dataType,
+                        Arrays.asList(arrayTable)
+                                .subList(1, arrayTable.length)
+                ));
+            } catch (ClassNotFoundException e) {
+                getPlugin().getLogger().warning("Class not found: " + arrayTable[0]);
+            }
+        }
     }
 
     public void save() {
-        try {
-            file.getParentFile().mkdirs();
-            if (!file.exists()) if (!file.createNewFile()) throw new RuntimeException("Failed to create file: " + file.getAbsolutePath());
-            List<String> stringTables = new ArrayList<>();
-            for (DataTable<P, ?, ?> dataTable : getItems()) stringTables.add(dataTable.getDataType().getName() + "\n" + String.join("\n", dataTable.serialize()));
-            FileWriter fw = new FileWriter(file);
-            fw.write(Base64.getEncoder().encodeToString(String.join("\n\n", stringTables).getBytes()));
-            fw.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (list.isEmpty()) return;
+        List<String> stringTables = new ArrayList<>();
+        for (DataTable<P, ?, ?> dataTable : getItems()) {
+            if (dataTable.getDtos().isEmpty()) continue;
+            stringTables.add(dataTable.getDataType().getName() + "\n" + String.join("\n", dataTable.serialize()));
         }
+        FileUtil.setTextFile(file, Base64.getEncoder().encodeToString(String.join("\n\n", stringTables).getBytes()));
     }
 }

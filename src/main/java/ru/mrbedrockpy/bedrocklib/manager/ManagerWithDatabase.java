@@ -9,12 +9,14 @@ import java.util.Collection;
 public interface ManagerWithDatabase<P extends BedrockPlugin<P>, I extends ManagerItem<ID>, ID> {
 
     default void load(DataBase<P> dataBase, Class<I> itemType, Collection<I> items) {
-        DataTable<P, I, ID> table = dataBase.createTableIfNotExists(itemType);
+        DataTable<P, I, ID> table = dataBase.getTable(itemType);
+        if (table == null) return;
         items.clear();
         items.addAll(table.getDtos());
     }
 
     default void save(DataBase<P> dataBase, Class<I> itemType, Collection<I> items) {
+        if (items.isEmpty()) return;
         DataTable<P, I, ID> table = dataBase.createTableIfNotExists(itemType);
         table.clear();
         table.registerAll(items);

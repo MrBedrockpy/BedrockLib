@@ -6,17 +6,16 @@ import ru.mrbedrockpy.bedrocklib.manager.ManagerItem;
 import java.util.function.Function;
 
 @AllArgsConstructor
-public class Serializer<T> implements ManagerItem<Class<?>> {
+public abstract class Serializer<T, S> implements ManagerItem<Class<?>> {
 
     private final Class<T> dataType;
-    private final Function<T, String> serializer;
-    private final Function<String, T> deserializer;
+    private final Function<T, S> serializer;
+    private final Function<S, T> deserializer;
 
-    public String serialize(T object) {
+    public S serialize(T object) {
         return serializer.apply(object);
     }
-
-    public T deserialize(String data) {
+    public T deserialize(S data) {
         return deserializer.apply(data);
     }
 

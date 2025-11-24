@@ -17,12 +17,13 @@ public class ListManager<P extends BedrockPlugin<P>, I extends ManagerItem<ID>, 
 
     @Override
     public boolean register(I item) {
+        if (getById(item.getId()) != null) return false;
         return list.add(item);
     }
 
     @Override
     public boolean registerAll(Collection<I> items) {
-        return list.addAll(items);
+        return items.stream().allMatch(this::register);
     }
 
     @Override
@@ -37,7 +38,7 @@ public class ListManager<P extends BedrockPlugin<P>, I extends ManagerItem<ID>, 
 
     @Override
     public boolean unregisterAll(Collection<I> items) {
-        return list.removeAll(items);
+        return items.stream().allMatch(this::unregister);
     }
 
     @Override

@@ -1,9 +1,9 @@
-package ru.mrbedrockpy.bedrocklib.config.annotation;
+package ru.mrbedrockpy.bedrocklib.config.singleton.annotation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ConfigField {
+public @interface Config {
     String name();
 }

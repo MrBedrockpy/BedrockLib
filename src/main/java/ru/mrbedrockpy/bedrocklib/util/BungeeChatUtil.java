@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 @UtilityClass
-public class ChatUtil {
+public class BungeeChatUtil {
 
     public String format(char colorChar, String text) {
         return ChatColor.translateAlternateColorCodes(colorChar, text);
@@ -40,31 +40,22 @@ public class ChatUtil {
         for (String arg : placeholdersMap.keySet()) {
             text = text.replaceAll(arg, placeholdersMap.get(arg));
         }
-
         return format(text);
     }
 
     public List<String> applyPlaceholders(List<String> text, Map<String, String> placeholdersMap) {
         for (int i = 0; i < text.size(); i++) {
             String line = text.get(i);
-
-            for (String arg : placeholdersMap.keySet()) {
-                line = line.replaceAll(arg, placeholdersMap.get(arg));
-            }
-
+            for (String arg : placeholdersMap.keySet()) line = line.replaceAll(arg, placeholdersMap.get(arg));
             text.set(i, format(line));
         }
-
         return text;
     }
 
     public String[] applyPlaceholders(String[] text, Map<String, String> placeholdersMap) {
         for (int i = 0; i < text.length; i++) {
-            for (String arg : placeholdersMap.keySet()) {
-                text[i] = format(text[i].replaceAll(arg, placeholdersMap.get(arg)));
-            }
+            for (String arg : placeholdersMap.keySet()) text[i] = format(text[i].replaceAll(arg, placeholdersMap.get(arg)));
         }
-
         return text;
     }
 

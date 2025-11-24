@@ -1,4 +1,4 @@
-package ru.mrbedrockpy.bedrocklib.config.data;
+package ru.mrbedrockpy.bedrocklib.config.singleton.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

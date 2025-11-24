@@ -1,33 +1,33 @@
-package ru.mrbedrockpy.bedrocklib.config;
+package ru.mrbedrockpy.bedrocklib.config.singleton;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import ru.mrbedrockpy.bedrocklib.BedrockPlugin;
-import ru.mrbedrockpy.bedrocklib.config.annotation.Config;
-import ru.mrbedrockpy.bedrocklib.config.annotation.ConfigField;
-import ru.mrbedrockpy.bedrocklib.config.data.ConfigData;
-import ru.mrbedrockpy.bedrocklib.config.data.ConfigFieldData;
+import ru.mrbedrockpy.bedrocklib.config.singleton.annotation.Config;
+import ru.mrbedrockpy.bedrocklib.config.singleton.annotation.ConfigField;
+import ru.mrbedrockpy.bedrocklib.config.singleton.data.ConfigData;
+import ru.mrbedrockpy.bedrocklib.config.singleton.data.ConfigFieldData;
 import ru.mrbedrockpy.bedrocklib.manager.Manager;
 import ru.mrbedrockpy.bedrocklib.serialization.SerializeConfig;
-import ru.mrbedrockpy.bedrocklib.serialization.Serializer;
+import ru.mrbedrockpy.bedrocklib.serialization.string.StringSerializer;
 import ru.mrbedrockpy.bedrocklib.util.FileUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.function.Supplier;
 
 public final class ConfigManager<P extends BedrockPlugin<P>> extends Manager<P> {
 
-    private final Yaml yaml = new Yaml(getDumperOptions());
-
+    private final Yaml yaml;
     private final File configFolder;
     private final SerializeConfig<P> serializeConfig;
-
     private final ConfigData[] configs;
 
-    private ConfigManager(P plugin, File configFolder, SerializeConfig<P> serializeConfig, Class<?>... configs) {
+    private ConfigManager(P plugin, Yaml yaml, File configFolder, SerializeConfig<P> serializeConfig, Class<?>... configs) {
         super(plugin);
+        this.yaml = yaml;
         this.configFolder = configFolder;
         this.serializeConfig = serializeConfig;
         this.configs = Arrays.stream(configs)
@@ -90,7 +90,7 @@ public final class ConfigManager<P extends BedrockPlugin<P>> extends Manager<P> 
             if (data.containsKey(fieldData.getName())) {
                 try {
                     String value = String.valueOf(data.get(fieldData.getName()));
-                    Serializer<?> serializer = serializeConfig.getById(fieldData.getType());
+                    StringSerializer<?> serializer = serializeConfig.getById(fieldData.getType());
                     if (serializer == null) throw new RuntimeException("Serializer not found: " + fieldData.getType().getName());
                     fieldData.setValue(serializer.deserialize(value));
                 } catch (Exception e) {
@@ -121,8 +121,7 @@ public final class ConfigManager<P extends BedrockPlugin<P>> extends Manager<P> 
     private void saveConfig(ConfigData configData, Map<String, Object> data) {
         for (ConfigFieldData<?> fieldData : configData.getFields()) {
             try {
-
-                Serializer<?> serializer = serializeConfig.getById(fieldData.getValue().getClass());
+                StringSerializer<?> serializer = serializeConfig.getById(fieldData.getType());
                 if (serializer == null) throw new RuntimeException("Serializer not found: " + fieldData.getType().getName());
                 data.put(fieldData.getName(), serialize(serializer, fieldData.getValue()));
             } catch (Exception e) {
@@ -136,18 +135,8 @@ public final class ConfigManager<P extends BedrockPlugin<P>> extends Manager<P> 
         }
     }
 
-    private <F> String serialize(Serializer<F> serializer, Object value) {
+    private <F> String serialize(StringSerializer<F> serializer, Object value) {
         return serializer.serialize((F) value);
-    }
-
-    private DumperOptions getDumperOptions() {
-        DumperOptions options = new DumperOptions();
-        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        options.setDefaultScalarStyle(DumperOptions.ScalarStyle.PLAIN);
-        options.setPrettyFlow(true);
-        options.setIndent(2);
-        options.setSplitLines(false);
-        return options;
     }
 
     public static Builder builder() {
@@ -156,23 +145,54 @@ public final class ConfigManager<P extends BedrockPlugin<P>> extends Manager<P> 
 
     public static final class Builder {
 
+        private Yaml yaml;
         private File pluginFolder;
         private Class<?>[] configs;
 
-        private Builder() {}
+        private Builder() {
+            setYamlOptions(getDumperOptions());
+        }
 
-        public Builder withPluginFolder(File pluginFolder) {
+        public Builder setYaml(Yaml yaml) {
+            this.yaml = yaml;
+            return this;
+        }
+
+        public Builder setYaml(Supplier<Yaml> yaml) {
+            return setYaml(yaml.get());
+        }
+
+        public Builder setYamlOptions(DumperOptions dumperOptions) {
+            this.yaml = new Yaml(dumperOptions);
+            return this;
+        }
+
+        public Builder setYamlOptions(Supplier<DumperOptions> dumperOptions) {
+            return setYamlOptions(dumperOptions.get());
+        }
+
+        public Builder setPluginFolder(File pluginFolder) {
             this.pluginFolder = pluginFolder;
             return this;
         }
 
-        public Builder withConfigs(Class<?>... configs) {
+        public Builder setConfigs(Class<?>... configs) {
             this.configs = configs;
             return this;
         }
 
         public <P extends BedrockPlugin<P>> ConfigManager<P> build(P plugin, SerializeConfig<P> serializeConfig) {
-            return new ConfigManager<>(plugin, pluginFolder, serializeConfig, configs);
+            return new ConfigManager<>(plugin, yaml, pluginFolder, serializeConfig, configs);
+        }
+
+        private DumperOptions getDumperOptions() {
+            DumperOptions options = new DumperOptions();
+            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+            options.setDefaultScalarStyle(DumperOptions.ScalarStyle.PLAIN);
+            options.setPrettyFlow(true);
+            options.setIndent(2);
+            options.setSplitLines(false);
+            return options;
         }
     }
 }
